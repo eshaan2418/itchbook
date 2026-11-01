@@ -37,7 +37,12 @@ if lat:
             m = statistics.median(vals)
             cells.append(f"{m:.0f} [{min(vals):.0f}-{max(vals):.0f}]" if len(vals) > 1 else f"{m:.0f}")
         print(f"| {name} | " + " | ".join(cells) + " |")
-    print(f"\nTimer resolution: {runs[0]['timer_ns_per_tick']:.2f} ns per tick.")
+    tfile = os.path.join(d, "timer.json")
+    if os.path.exists(tfile):
+        t = json.load(open(tfile))
+        print(f"\nTimer: reported {t['reported_ns_per_tick']:.2f} ns/tick; observed step median "
+              f"{t['median_step_ns']:.1f} ns (min {t['min_step_ns']:.1f} ns); read overhead {t['read_overhead_ns']:.1f} ns. "
+              "Two reads bracket each message, so per-message values include ~one read of overhead.")
 
 pub = {k: v for k, v in groups.items() if "handoff_latency_ns" in v[0]}
 if pub:

@@ -40,7 +40,7 @@ struct NullListener {
 struct BookConfig {
   std::size_t order_capacity = 1u << 22;  // live orders across all symbols
   std::size_t level_capacity = 1u << 20;  // live price levels across all symbols
-  std::size_t side_reserve = 64;          // initial per-side level array capacity
+  std::size_t side_reserve = 256;         // initial per-side level array capacity (PERF_LOG)
 };
 
 template <class Listener = NullListener, LevelSearch Search = LevelSearch::Linear>

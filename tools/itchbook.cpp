@@ -318,7 +318,7 @@ int cmd_replay(const Args& a) {
   const std::string impl = a.get("impl", "opt");
   BookConfig cfg{static_cast<std::size_t>(a.num("order-capacity", 1u << 22)),
                  static_cast<std::size_t>(a.num("level-capacity", 1u << 20)),
-                 static_cast<std::size_t>(a.num("side-reserve", 64))};
+                 static_cast<std::size_t>(a.num("side-reserve", 256))};
   if (a.flag("publish")) return replay_publish(a, o, cfg);
   if (impl == "opt") {
     auto b = std::make_unique<OrderBook<NullListener, LevelSearch::Linear>>(cfg);
@@ -461,6 +461,7 @@ int cmd_stats(const Args& a) {
   std::size_t peak_live = 0;
   std::uint64_t peak_ts = 0;
   std::size_t peak_levels = 0;
+  std::uint64_t max_ref = 0;
   const std::uint8_t* data;
   std::size_t size;
   bool done = false;
@@ -474,6 +475,8 @@ int cmd_stats(const Args& a) {
         last_ts = be::u48(m + 5);
         if (!first_ts) first_ts = last_ts;
       }
+      if ((m[0] == 'A' || m[0] == 'F') && len >= 19) max_ref = std::max(max_ref, be::u64(m + 11));
+      if (m[0] == 'U' && len >= 27) max_ref = std::max(max_ref, be::u64(m + 19));
       dispatch(m, len, *book);
       if (book->live_orders() > peak_live) {
         peak_live = book->live_orders();
@@ -485,9 +488,10 @@ int cmd_stats(const Args& a) {
   }
   std::printf("{\n  \"messages\": %" PRIu64 ",\n  \"bytes\": %" PRIu64
               ",\n  \"first_ts\": \"%s\",\n  \"last_ts\": \"%s\",\n  \"peak_live_orders\": %zu,"
-              "\n  \"peak_live_orders_at\": \"%s\",\n  \"peak_live_levels\": %zu,\n  \"by_type\": {",
+              "\n  \"peak_live_orders_at\": \"%s\",\n  \"peak_live_levels\": %zu,\n  \"max_order_ref\": %" PRIu64
+              ",\n  \"by_type\": {",
               msgs, bytes, fmt_ts(first_ts).c_str(), fmt_ts(last_ts).c_str(), peak_live,
-              fmt_ts(peak_ts).c_str(), peak_levels);
+              fmt_ts(peak_ts).c_str(), peak_levels, max_ref);
   bool first = true;
   for (int t = 0; t < 256; ++t)
     if (counts[t]) {
@@ -589,11 +593,39 @@ int cmd_gen(const Args& a) {
   return 0;
 }
 
+// ---- timer: resolution and overhead of the timestamp source ------------------------------------
+int cmd_timer(const Args& a) {
+  prefer_performance_cores();
+  const std::uint64_t n = a.num("samples", 20'000'000);
+  const double ns_tick = Clock::ns_per_tick();
+  // Overhead: back-to-back reads, total elapsed / n.
+  const double w0 = wall_seconds();
+  std::uint64_t sink = 0;
+  for (std::uint64_t i = 0; i < n; ++i) sink += Clock::now();
+  const double per_call_ns = (wall_seconds() - w0) * 1e9 / static_cast<double>(n);
+  // Resolution: distribution of the smallest observable increments.
+  Histogram steps;
+  for (int i = 0; i < 200000; ++i) {
+    const std::uint64_t t0 = Clock::now();
+    std::uint64_t t1;
+    do t1 = Clock::now(); while (t1 == t0);
+    steps.record(t1 - t0);
+  }
+  std::printf("{\n  \"reported_ns_per_tick\": %.4f,\n  \"read_overhead_ns\": %.2f,\n"
+              "  \"min_step_ns\": %.2f,\n  \"median_step_ns\": %.2f,\n  \"p99_step_ns\": %.2f,\n"
+              "  \"sink\": %llu\n}\n",
+              ns_tick, per_call_ns, static_cast<double>(steps.min()) * ns_tick,
+              static_cast<double>(steps.quantile(0.5)) * ns_tick,
+              static_cast<double>(steps.quantile(0.99)) * ns_tick,
+              static_cast<unsigned long long>(sink & 1));
+  return 0;
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
   if (argc < 2) {
-    std::fprintf(stderr, "usage: itchbook {replay|verify|stats|top|gen} ...\n");
+    std::fprintf(stderr, "usage: itchbook {replay|verify|stats|top|gen|timer} ...\n");
     return 1;
   }
   const std::string cmd = argv[1];
@@ -603,6 +635,7 @@ int main(int argc, char** argv) {
   if (cmd == "stats") return cmd_stats(a);
   if (cmd == "top") return cmd_top(a);
   if (cmd == "gen") return cmd_gen(a);
+  if (cmd == "timer") return cmd_timer(a);
   std::fprintf(stderr, "unknown command %s\n", cmd.c_str());
   return 1;
 }

@@ -63,29 +63,44 @@ void BM_ParseOnly(benchmark::State& st) {
                                              benchmark::Counter::kIsRate | benchmark::Counter::kInvert);
 }
 
-// Churn: insert ref, erase ref - window live keys, the access pattern of an ITCH day.
-void BM_OrderMapChurn(benchmark::State& st) {
-  const std::uint64_t window = static_cast<std::uint64_t>(st.range(0));
-  OrderMap m(window * 2);
-  std::uint64_t k = 1;
-  for (; k <= window; ++k) m.insert(k, static_cast<std::uint32_t>(k));
+// Churn at a fixed live-set size: insert a new (increasing) ref, erase a pseudo-randomly chosen
+// live ref. Mirrors ITCH, where refs are assigned in order but orders die in arbitrary order.
+// Erasing in insertion order would flatter std::unordered_map (identity hash -> sequential
+// buckets), so both maps get the same random erase sequence.
+template <class Map>
+void churn(benchmark::State& st, Map& m) {
+  const std::size_t window = static_cast<std::size_t>(st.range(0));
+  std::vector<std::uint64_t> live(window);
+  std::uint64_t k = 1, x = 0x9E3779B97F4A7C15ull;
+  for (auto& v : live) {
+    v = k++;
+    m.insert({v, static_cast<std::uint32_t>(v)});
+  }
   for (auto _ : st) {
-    m.insert(k, static_cast<std::uint32_t>(k));
-    benchmark::DoNotOptimize(m.erase(k - window));
+    x ^= x << 13; x ^= x >> 7; x ^= x << 17;  // xorshift
+    const std::size_t i = static_cast<std::size_t>(x % window);
+    m.erase(live[i]);
+    live[i] = k;
+    m.insert({k, static_cast<std::uint32_t>(k)});
     ++k;
   }
+  benchmark::DoNotOptimize(m.size());
+}
+struct OrderMapAdapter {
+  OrderMap m;
+  explicit OrderMapAdapter(std::size_t n) : m(n) {}
+  void insert(std::pair<std::uint64_t, std::uint32_t> kv) { m.insert(kv.first, kv.second); }
+  void erase(std::uint64_t key) { benchmark::DoNotOptimize(m.erase(key)); }
+  std::size_t size() const { return m.size(); }
+};
+void BM_OrderMapChurn(benchmark::State& st) {
+  OrderMapAdapter m(static_cast<std::size_t>(st.range(0)) * 4);
+  churn(st, m);
 }
 void BM_StdUnorderedMapChurn(benchmark::State& st) {
-  const std::uint64_t window = static_cast<std::uint64_t>(st.range(0));
   std::unordered_map<std::uint64_t, std::uint32_t> m;
-  m.reserve(window * 2);
-  std::uint64_t k = 1;
-  for (; k <= window; ++k) m.emplace(k, static_cast<std::uint32_t>(k));
-  for (auto _ : st) {
-    m.emplace(k, static_cast<std::uint32_t>(k));
-    benchmark::DoNotOptimize(m.erase(k - window));
-    ++k;
-  }
+  m.reserve(static_cast<std::size_t>(st.range(0)) * 2);
+  churn(st, m);
 }
 }  // namespace
 

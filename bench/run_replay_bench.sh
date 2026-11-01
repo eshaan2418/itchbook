@@ -37,6 +37,7 @@ run() {  # name, args...
 }
 
 machine
+"$BIN" timer > "$OUT/timer.json"
 BEST=(--prefetch 16 --prefetch-stages 2)
 run opt_noprefetch            --impl opt
 run opt_prefetch1             --impl opt --prefetch 16
