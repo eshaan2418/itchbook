@@ -1,0 +1,13 @@
+build*/
+.cache/
+compile_commands.json
+*.gz
+*.itch
+research/.venv/
+__pycache__/
+fuzz/corpus/
+fuzz/crash-*
+*.log
+!bench/results/*.log
+.DS_Store
+NOTES.md
