@@ -1,0 +1,20 @@
+{
+  "impl": "opt-hybrid",
+  "messages": 368366634,
+  "bytes_decompressed": 11245883092,
+  "book_seconds": 17.2265,
+  "book_msgs_per_sec": 21383679,
+  "decompress_seconds": 11.1269,
+  "wall_seconds": 28.3537,
+  "end_to_end_msgs_per_sec": 12991827,
+  "prefetch": 8,
+  "prefetch_stages": 2,
+  "chunk_bytes": 67108864,
+  "adds": 164696353, "executes": 8255881, "cancels": 4669874, "deletes": 158273361, "replaces": 27222746,
+  "unknown_ref": 0, "duplicate_ref": 0, "overfill": 0,
+  "bbo_updates": 174890436,
+  "live_orders_end": 0,
+  "peak_live_orders_chunk_sampled": 1741136,
+  "heap_allocs_after_first_chunk": 4100,
+  "peak_rss_bytes": 330399744
+}

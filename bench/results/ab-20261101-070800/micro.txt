@@ -1,0 +1,35 @@
+-----------------------------------------------------------------------------------------------------------------------
+Benchmark                                                             Time             CPU   Iterations UserCounters...
+-----------------------------------------------------------------------------------------------------------------------
+BM_ParseOnly_mean                                                  9.60 ms         9.59 ms            5 msgs/s=208.688M/s ns/msg=4.79303ns
+BM_ParseOnly_median                                                9.55 ms         9.54 ms            5 msgs/s=209.74M/s ns/msg=4.7678ns
+BM_ParseOnly_stddev                                               0.170 ms        0.170 ms            5 msgs/s=3.64922M/s ns/msg=84.995ps
+BM_ParseOnly_cv                                                    1.78 %          1.77 %             5 msgs/s=1.75% ns/msg=1.77%
+BM_Book<OrderBook<NullListener, LevelSearch::Linear>>_mean         94.9 ms         94.7 ms            5 msgs/s=21.1092M/s ns/msg=47.3738ns
+BM_Book<OrderBook<NullListener, LevelSearch::Linear>>_median       94.8 ms         94.7 ms            5 msgs/s=21.1236M/s ns/msg=47.3405ns
+BM_Book<OrderBook<NullListener, LevelSearch::Linear>>_stddev      0.498 ms        0.502 ms            5 msgs/s=111.899k/s ns/msg=250.943ps
+BM_Book<OrderBook<NullListener, LevelSearch::Linear>>_cv           0.53 %          0.53 %             5 msgs/s=0.53% ns/msg=0.53%
+BM_Book<OrderBook<NullListener, LevelSearch::Binary>>_mean         93.7 ms         93.6 ms            5 msgs/s=21.3672M/s ns/msg=46.8047ns
+BM_Book<OrderBook<NullListener, LevelSearch::Binary>>_median       93.3 ms         93.2 ms            5 msgs/s=21.4584M/s ns/msg=46.6018ns
+BM_Book<OrderBook<NullListener, LevelSearch::Binary>>_stddev       1.01 ms        0.988 ms            5 msgs/s=222.395k/s ns/msg=493.812ps
+BM_Book<OrderBook<NullListener, LevelSearch::Binary>>_cv           1.07 %          1.06 %             5 msgs/s=1.04% ns/msg=1.06%
+BM_Book<ReferenceBook>_mean                                         151 ms          151 ms            5 msgs/s=13.2641M/s ns/msg=75.3963ns
+BM_Book<ReferenceBook>_median                                       151 ms          150 ms            5 msgs/s=13.3012M/s ns/msg=75.1814ns
+BM_Book<ReferenceBook>_stddev                                      1.35 ms         1.33 ms            5 msgs/s=116.046k/s ns/msg=664.717ps
+BM_Book<ReferenceBook>_cv                                          0.89 %          0.88 %             5 msgs/s=0.87% ns/msg=0.88%
+BM_OrderMapChurn/65536_mean                                        5.98 ns         5.97 ns            5
+BM_OrderMapChurn/65536_median                                      5.98 ns         5.97 ns            5
+BM_OrderMapChurn/65536_stddev                                     0.006 ns        0.006 ns            5
+BM_OrderMapChurn/65536_cv                                          0.11 %          0.10 %             5
+BM_OrderMapChurn/4194304_mean                                      21.6 ns         21.6 ns            5
+BM_OrderMapChurn/4194304_median                                    21.6 ns         21.6 ns            5
+BM_OrderMapChurn/4194304_stddev                                   0.052 ns        0.050 ns            5
+BM_OrderMapChurn/4194304_cv                                        0.24 %          0.23 %             5
+BM_StdUnorderedMapChurn/65536_mean                                 48.7 ns         48.7 ns            5
+BM_StdUnorderedMapChurn/65536_median                               48.8 ns         48.7 ns            5
+BM_StdUnorderedMapChurn/65536_stddev                              0.105 ns        0.107 ns            5
+BM_StdUnorderedMapChurn/65536_cv                                   0.22 %          0.22 %             5
+BM_StdUnorderedMapChurn/4194304_mean                                389 ns          389 ns            5
+BM_StdUnorderedMapChurn/4194304_median                              389 ns          389 ns            5
+BM_StdUnorderedMapChurn/4194304_stddev                            0.966 ns        0.953 ns            5
+BM_StdUnorderedMapChurn/4194304_cv                                 0.25 %          0.25 %             5

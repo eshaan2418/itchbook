@@ -548,7 +548,7 @@ int cmd_top(const Args& a) {
       const std::size_t na = book->depth(l, Side::Sell, asks.data(), depth);
       std::printf("\033[2J\033[H%s  %s   feed msgs %" PRIu64 "  (%s msgs %" PRIu64 ")\n\n",
                   a.get("symbol"), fmt_ts(ts).c_str(), msgs, a.get("symbol"), sym_msgs);
-      std::printf("   %8s %10s %5s | %-10s %-8s %-5s\n", "orders", "bid size", "", "ask", "size",
+      std::printf("%8s %10s %10s | %-10s %-8s %-5s\n", "orders", "size", "bid", "ask", "size",
                   "orders");
       for (std::size_t i = 0; i < depth; ++i) {
         char lb[64] = "", rb[64] = "";

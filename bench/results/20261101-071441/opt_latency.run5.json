@@ -1,0 +1,22 @@
+{
+  "impl": "opt-linear",
+  "messages": 368366634,
+  "bytes_decompressed": 11245883092,
+  "book_seconds": 23.7621,
+  "book_msgs_per_sec": 15502299,
+  "decompress_seconds": 11.3736,
+  "wall_seconds": 35.1360,
+  "end_to_end_msgs_per_sec": 10484017,
+  "prefetch": 16,
+  "prefetch_stages": 2,
+  "chunk_bytes": 67108864,
+  "adds": 164696353, "executes": 8255881, "cancels": 4669874, "deletes": 158273361, "replaces": 27222746,
+  "unknown_ref": 0, "duplicate_ref": 0, "overfill": 0,
+  "bbo_updates": 174890436,
+  "live_orders_end": 0,
+  "peak_live_orders_chunk_sampled": 1741136,
+  "heap_allocs_after_first_chunk": 291,
+  "peak_rss_bytes": 353746944,
+  "timer_ns_per_tick": 1.000,
+  "latency_ns": {"p50": 42.0, "p90": 125.0, "p99": 250.0, "p99.9": 417.0, "p99.99": 917.0, "max": 110488.0, "mean": 62.28}
+}

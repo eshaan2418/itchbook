@@ -1,0 +1,13 @@
+{
+  "messages": 368366634,
+  "book_messages_compared": 363118215,
+  "compared_top_k": 10,
+  "full_depth_compares": 363131,
+  "mismatches": 0,
+  "final_symbols_mismatched": 0,
+  "integrity_counters_equal": true,
+  "unknown_ref": 0, "duplicate_ref": 0, "overfill": 0,
+  "crossed_after_msg": {"pre_open": 8, "regular": 655, "post_close": 0},
+  "live_orders_end": 0,
+  "last_timestamp": "20:00:00.073006"
+}

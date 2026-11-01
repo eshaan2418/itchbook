@@ -1,0 +1,8 @@
+{
+  "reported_ns_per_tick": 1.0000,
+  "read_overhead_ns": 8.69,
+  "min_step_ns": 17.00,
+  "median_step_ns": 42.00,
+  "p99_step_ns": 42.00,
+  "sink": 1
+}

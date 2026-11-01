@@ -1,0 +1,20 @@
+{
+  "impl": "opt-linear",
+  "messages": 368366634,
+  "bytes_decompressed": 11245883092,
+  "book_seconds": 16.6849,
+  "book_msgs_per_sec": 22077835,
+  "decompress_seconds": 11.0875,
+  "wall_seconds": 27.7727,
+  "end_to_end_msgs_per_sec": 13263621,
+  "prefetch": 32,
+  "prefetch_stages": 2,
+  "chunk_bytes": 67108864,
+  "adds": 164696353, "executes": 8255881, "cancels": 4669874, "deletes": 158273361, "replaces": 27222746,
+  "unknown_ref": 0, "duplicate_ref": 0, "overfill": 0,
+  "bbo_updates": 174890436,
+  "live_orders_end": 0,
+  "peak_live_orders_chunk_sampled": 1741136,
+  "heap_allocs_after_first_chunk": 4100,
+  "peak_rss_bytes": 330416128
+}

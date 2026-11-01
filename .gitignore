@@ -11,3 +11,4 @@ fuzz/crash-*
 !bench/results/*.log
 .DS_Store
 NOTES.md
+!bench/results/**/*.log
