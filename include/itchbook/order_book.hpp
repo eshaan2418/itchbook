@@ -30,7 +30,7 @@ namespace itchbook {
 
 // Linear: scan from the touch. Binary: partition_point over the whole side. Hybrid: scan the
 // kHybridScan levels nearest the touch, then binary-search the rest (deep books).
-enum class LevelSearch { Linear, Binary, Hybrid };
+enum class LevelSearch : std::uint8_t { Linear, Binary, Hybrid };
 inline constexpr std::size_t kHybridScan = 8;
 
 struct NullListener {

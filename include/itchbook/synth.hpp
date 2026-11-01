@@ -131,7 +131,8 @@ class Encoder {
   void stock(const std::string& s) {
     char buf[8];
     std::memset(buf, ' ', 8);
-    std::memcpy(buf, s.data(), s.size() < 8 ? s.size() : 8);
+    // ITCH symbols are 8-byte space-padded fields, not C strings.
+    std::memcpy(buf, s.data(), s.size() < 8 ? s.size() : 8);  // NOLINT(bugprone-not-null-terminated-result)
     for (char c : buf) u8(static_cast<std::uint8_t>(c));
   }
   std::vector<std::uint8_t>& out_;

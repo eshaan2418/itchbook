@@ -35,7 +35,7 @@ inline std::uint64_t u48(const std::uint8_t* p) noexcept {
 }  // namespace be
 
 // Wire sizes (bytes, excluding the 2-byte length prefix used by the sample-file framing).
-enum MsgSize : std::uint16_t {
+enum MsgSize : std::uint8_t {
   kSystemEvent = 12,
   kStockDirectory = 39,
   kTradingAction = 25,

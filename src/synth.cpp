@@ -122,8 +122,11 @@ std::vector<std::uint8_t> generate_synthetic(const SynthConfig& cfg) {
     const double u = rng.uniform();
     const bool must_add = book.empty();
     const bool must_remove = book.size() >= cfg.max_live_per_symbol;
-    double acc = cfg.p_add;
-    if (must_add || (!must_remove && u < acc)) {
+    const double t_add = cfg.p_add;
+    const double t_delete = t_add + cfg.p_delete;
+    const double t_cancel = t_delete + cfg.p_cancel;
+    const double t_execute = t_cancel + cfg.p_execute;
+    if (must_add || (!must_remove && u < t_add)) {
       const Side side = rng.below(2) ? Side::Sell : Side::Buy;
       const std::uint32_t px = draw_price(sym, side);
       const std::uint32_t sh = draw_shares();
@@ -137,10 +140,10 @@ std::vector<std::uint8_t> generate_synthetic(const SynthConfig& cfg) {
         book[k] = book.back();
         book.pop_back();
       };
-      if (u < (acc += cfg.p_delete)) {
+      if (u < t_delete) {
         enc.del(locate, ts, o.ref);
         drop();
-      } else if (u < (acc += cfg.p_cancel)) {
+      } else if (u < t_cancel) {
         if (o.shares > 1) {
           const auto c = static_cast<std::uint32_t>(1 + rng.below(o.shares - 1));
           enc.cancel(locate, ts, o.ref, c);
@@ -149,7 +152,7 @@ std::vector<std::uint8_t> generate_synthetic(const SynthConfig& cfg) {
           enc.cancel(locate, ts, o.ref, o.shares);
           drop();
         }
-      } else if (u < (acc += cfg.p_execute)) {
+      } else if (u < t_execute) {
         const bool full = rng.below(2) == 0;
         const std::uint32_t e =
             full ? o.shares : static_cast<std::uint32_t>(1 + rng.below(o.shares));

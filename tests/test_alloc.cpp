@@ -10,6 +10,7 @@
 using namespace itchbook;
 
 TEST(Alloc, NoHeapAllocationAfterWarmup) {
+  if (!alloc_hook_enabled()) GTEST_SKIP() << "allocation hook disabled under ThreadSanitizer";
   SynthConfig cfg{.seed = 21, .symbols = 16, .messages = 2'000'000};
   cfg.max_live_per_symbol = 2000;
   const auto buf = generate_synthetic(cfg);

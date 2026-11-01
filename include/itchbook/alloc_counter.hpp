@@ -5,4 +5,5 @@
 
 namespace itchbook {
 std::uint64_t alloc_count() noexcept;
+bool alloc_hook_enabled() noexcept;  // false under TSan (runtime owns operator new)
 }
